@@ -1,0 +1,118 @@
+﻿@model Importify.Web.Models.ImportViewModel
+
+@{
+    ViewData["Title"] = "Employee Import";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">📥 Employee Import</h2>
+
+    <form asp-action="Import" asp-controller="Employees" method="post" enctype="multipart/form-data" class="mb-4">
+        <div class="input-group">
+            <input type="file" name="file" class="form-control" />
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-upload"></i> Import
+            </button>
+        </div>
+    </form>
+
+    @if (Model.ImportResult.Total > 0)
+    {
+        <div class="alert alert-info d-flex justify-content-between align-items-center">
+            <div>
+                <strong>Imported:</strong> @Model.ImportResult.Success of @Model.ImportResult.Total
+                <span class="text-danger ms-3"><strong>Failed:</strong> @Model.ImportResult.Failed</span>
+            </div>
+            <button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#importDetails">
+                Details
+            </button>
+        </div>
+
+        <div class="collapse" id="importDetails">
+            <div class="card card-body mb-3">
+                <p><strong>Total rows:</strong> @Model.ImportResult.Total</p>
+                <p><strong>Successful:</strong> @Model.ImportResult.Success</p>
+                <p><strong>Failed:</strong> @Model.ImportResult.Failed</p>
+
+                @if (Model.ImportResult.HasErrors)
+                {
+                    <hr />
+                    <h6>Errors:</h6>
+                    <ul class="mb-0">
+                        @foreach (var error in Model.ImportResult.Errors)
+                        {
+                            <li><strong>Row @error.LineNumber:</strong> @error.Message</li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    }
+
+
+    @if (Model.ImportResult.HasErrors)
+    {
+        <div class="alert alert-warning">
+            <h5>Import Errors:</h5>
+            <ul>
+                @foreach (var error in Model.ImportResult.Errors)
+                {
+                    <li><strong>Row @error.LineNumber:</strong> @error.Message</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <table id="employees" class="table table-striped table-hover table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Payroll #</th>
+                <th>Name</th>
+                <th>Date Of Birth</th>
+                <th>Telephone</th>
+                <th>Mobile</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Start Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model.Employees)
+            {
+                <tr>
+                    <td>@employee.PayrollNumber</td>
+                    <td>@employee.FirstName @employee.Surname</td>
+                    <td>@employee.DateOfBirth.ToShortDateString()</td>
+                    <td>@employee.Telephone</td>
+                    <td>@employee.Mobile</td>
+                    <td>@employee.Address</td>
+                    <td>@employee.Email</td>
+                    <td>@employee.StartDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles {
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#employees').DataTable({
+                order: [[1, 'asc']],
+                language: {
+                    search: '🔍 Search:',
+                    lengthMenu: 'Show _MENU_ entries',
+                    info: 'Showing _START_ to _END_ of _TOTAL_ entries'
+                }
+            });
+        });
+    </script>
+}

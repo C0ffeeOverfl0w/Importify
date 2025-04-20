@@ -1,0 +1,9 @@
+﻿global using Importify.Infrastructure.Configurations;
+global using Importify.Application.Configurations;
+global using Importify.Application.Abstractions;
+global using Importify.Domain.Abstractions;
+global using Importify.Application.Common;
+global using Importify.Application.DTOs;
+global using Microsoft.AspNetCore.Mvc;
+global using Importify.Web.Models;
+global using System.Text.Json;
