@@ -95,4 +95,4 @@ Pull requests and issues are welcome. Let's improve Importify together!
 
 ## 📜 License
 
-MIT © [YourName]
+MIT © [C0ffeeOverfl0w]
